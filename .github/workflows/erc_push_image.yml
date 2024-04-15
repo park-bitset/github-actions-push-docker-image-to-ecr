@@ -1,7 +1,12 @@
 name: ecr push image
 
 on:
-  push:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag for the image'
+        required: true
+        default: 'latest'
 
 jobs:
   push:
@@ -16,7 +21,7 @@ jobs:
       - uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-region: "ap-northeast-1"
-          role-to-assume: {{ secrets.ECRPushRoleARN }}
+          role-to-assume: ${{ secrets.ECRPushRoleARN }}
 
       # ECR login
       - uses: aws-actions/amazon-ecr-login@v1

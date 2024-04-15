@@ -35,5 +35,6 @@ jobs:
           IMAGE_TAG: "latest"
           #${{ github.sha }} # this could be any tag you want like "latest
         run: |
+          cd lambda-functions/hello-world
           docker build . --tag ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }}
           docker push ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }}

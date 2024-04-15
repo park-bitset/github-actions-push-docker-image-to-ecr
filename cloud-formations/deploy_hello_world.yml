@@ -59,4 +59,4 @@ Resources:
             }
           ]
         }
-      RoleName: lambda-scheduler-role
+        

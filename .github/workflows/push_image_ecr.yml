@@ -1,4 +1,4 @@
-name: ecr push image
+name: push image to ecr
 
 on:
   workflow_dispatch:

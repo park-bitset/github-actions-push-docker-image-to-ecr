@@ -1,0 +1,33 @@
+name: cfn 
+
+on:
+  workflow_dispatch:
+    branches:
+      - main
+    paths:
+      - 'cloudformation/*'
+      - '*.yml'
+      - '*.yaml'
+      - '*.json'
+
+jobs:
+  DeployCfn:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v3
+
+      # AWS authentication
+      - name: deplot cloudformation
+        run: |
+          aws cloudformation deploy \
+          --template-file cloud-formations/deploy_hello_world.yml \
+          --stack-name hello-world \
+          --capabilities CAPABILITY_IAM \
+          --parameter-overrides "file://cloud-formations/deploy_hello_world_parameters.json"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ap-northeast-1

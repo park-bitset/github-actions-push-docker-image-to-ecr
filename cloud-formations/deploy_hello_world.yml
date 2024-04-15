@@ -32,3 +32,31 @@ Resources:
       Path: /    
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+  LambdaScheduler:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: hello-world-scheduler
+      Description: Schedule to trigger hello-world lambda
+      FlexibleTimeWindow: 
+        Mode: "OFF"
+      ScheduleExpression: cron(01 * ? * ? *)
+      Target:
+        Arn: !GetAtt LambdaHelloWorld.Arn
+        RoleArn: !GetAtt LambdaSchedulerRole.Arn
+  LambdaSchedulerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "scheduler.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        }
+      RoleName: lambda-scheduler-role

@@ -32,6 +32,8 @@ Resources:
       Path: /    
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaRole
+        - arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess
   LambdaScheduler:
     Type: AWS::Scheduler::Schedule
     Properties:
@@ -39,7 +41,9 @@ Resources:
       Description: Schedule to trigger hello-world lambda
       FlexibleTimeWindow: 
         Mode: "OFF"
-      ScheduleExpression: cron(01 * ? * ? *)
+      ScheduleExpressionTimezone: "Asia/Tokyo"
+      ScheduleExpression: rate(1 minutes)
+      State: ENABLED
       Target:
         Arn: !GetAtt LambdaHelloWorld.Arn
         RoleArn: !GetAtt LambdaSchedulerRole.Arn
@@ -47,16 +51,11 @@ Resources:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
-        {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "scheduler.amazonaws.com"
-              },
-              "Action": "sts:AssumeRole"
-            }
-          ]
-        }
-        
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: scheduler.amazonaws.com
+            Action: "sts:AssumeRole"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaRole

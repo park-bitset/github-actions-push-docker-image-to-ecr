@@ -1,9 +1,0 @@
-version: "2"
-
-services:
-  hello-world-python-lambda:
-    build: .
-    image: hello-world-python-lambda:latest
-    tty: true
-    ports:
-      - '127.0.0.1:9000:8080'
